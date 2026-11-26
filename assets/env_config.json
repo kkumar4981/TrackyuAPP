@@ -1,0 +1,38 @@
+﻿{
+  "activeEnvironment": "prod",
+  "environments": {
+    "prod": {
+      "key": "prod",
+      "name": "Production",
+      "apiBaseUrl": "https://oyuapi.in/trackyuapi/api",
+      "portalUrl": "https://trackyuweb.runasp.net",
+      "downloadPortalUrl": "https://trackyuweb.runasp.net/download",
+      "downloadUrl": "https://oyuapi.in/trackyuapi/apk/Trackyu_latest.apk"
+    },
+    "uat": {
+      "key": "uat",
+      "name": "UAT Testing",
+      "apiBaseUrl": "https://uat-trackyu.runasp.net/api",
+      "portalUrl": "https://uat-trackyuweb.runasp.net",
+      "downloadPortalUrl": "https://uat-trackyuweb.runasp.net/download",
+      "downloadUrl": "https://uat-trackyu.runasp.net/apk/Trackyu_latest.apk"
+    },
+    "dev": {
+      "key": "dev",
+      "name": "Development",
+      "apiBaseUrl": "https://dev-trackyu.runasp.net/api",
+      "portalUrl": "https://dev-trackyuweb.runasp.net",
+      "downloadPortalUrl": "https://dev-trackyuweb.runasp.net/download",
+      "downloadUrl": "https://dev-trackyu.runasp.net/apk/Trackyu_latest.apk"
+    },
+    "local": {
+      "key": "local",
+      "name": "Localhost / Emulator",
+      "apiBaseUrl": "http://10.0.2.2:5000/api",
+      "portalUrl": "http://localhost:5173",
+      "downloadPortalUrl": "http://localhost:5173/download",
+      "downloadUrl": "http://10.0.2.2:5000/apk/Trackyu_latest.apk"
+    }
+  }
+}
+

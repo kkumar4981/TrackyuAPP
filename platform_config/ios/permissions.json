@@ -1,0 +1,9 @@
+{
+  "NSLocationWhenInUseUsageDescription": "Verify attendance at your assigned workplace and show your duty route.",
+  "NSLocationAlwaysAndWhenInUseUsageDescription": "During active duty, share your work location with your authorized manager even when the screen is locked. Tracking stops at checkout.",
+  "NSCameraUsageDescription": "Capture work photos and attendance evidence when you choose Take photo.",
+  "NSPhotoLibraryAddUsageDescription": "Save a work photo to your photo library when explicitly requested.",
+  "NSMotionUsageDescription": "Movement information can improve duty tracking efficiency if enabled in a future tracking configuration.",
+  "UIBackgroundModes": ["location", "fetch"],
+  "BGTaskSchedulerPermittedIdentifiers": ["com.transistorsoft.fetch"]
+}

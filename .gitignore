@@ -1,0 +1,11 @@
+.dart_tool/
+build/
+.flutter-plugins*
+android/local.properties
+android/key.properties
+*.jks
+ios/Pods/
+ios/.symlinks/
+*.xcuserstate
+config/private*
+android-debug-build.log

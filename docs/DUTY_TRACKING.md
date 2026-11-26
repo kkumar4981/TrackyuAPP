@@ -1,0 +1,42 @@
+# Android duty tracking
+
+Tracking runs from server-confirmed attendance punch-in to punch-out, for Field and Office attendance. A successful mobile login can record one separate GPS snapshot; it does not start continuous off-duty collection. New visits use the Open visit form with a fresh front-camera arrival selfie, fresh arrival GPS, and a fresh departure selfie/GPS. Previous Regular visits remain readable and can finish using their original ten-minute rule.
+
+## Native collector and offline delivery
+
+The paid flutter_background_geolocation dependency has been removed. Android uses an app-owned location foreground service, Fused Location with Android LocationManager fallback, encrypted app-private SQLite, Android Keystore AES-GCM and WorkManager. No paid location SDK licence is needed. This implementation targets Android API 29 and above; it is not an iOS background-tracking implementation.
+
+Requested GPS interval is 15 seconds, minimum callback interval 10 seconds, maximum batching delay 30 seconds. These are requests to Android, not guaranteed sample deadlines. The persistent duty notification makes collection visible. Precise location, background location and enabled GPS are checked in the startup checklist. The home card exposes permission/GPS state, pending uploads, latest fix/accuracy and sync errors. Battery settings are available as an advisory action. Returning to the app resumes a desired active collector after permission recovery.
+
+Location UUIDs and original UTC capture timestamps survive network loss and process restart. Coordinates and the limited upload credential are encrypted on the phone. Native uploads do not retain the full login JWT. The write-only credential lasts 30 days and is tied to employee/device/generation; ownership, active employee and the original attendance window are checked again on every upload. Ordinary device replacement or deactivation revokes it. The server accepts capture times up to seven days old and at most 30 seconds ahead, only inside that employee's actual punch window. An upload arriving after punch-out can still sync points captured before punch-out.
+
+Only explicit per-ID accepted/duplicate/rejected server acknowledgements remove pending points. Failed HTTP, partial acknowledgement and lost responses retain unacknowledged points. A repeated identical UUID is duplicate-safe; changed content under an existing UUID is rejected. Mock locations and invalid/out-of-window points are rejected, with a reason. Rejected points are excluded from the local route. Upload batches contain at most 100 native points (server limit 200). Foreground delivery runs at fixes / every 30 seconds and on connectivity recovery. WorkManager supplies connected-network retries and a 15-minute periodic fallback; each worker can drain up to eight batches within a two-minute budget. Retries use exponential backoff.
+
+Phone data has a seven-day retention window and a 100,000-point storage cap. Expired pending points increment the reported rejected count. Acknowledged points remain available in the phone's seven-day local trail. Server-side history is retained; configure a separate organisation retention policy before production. Account switches stop the previous user's collector and never display another user's local trail. An earlier user's encrypted pending queue is retained; while testing account switching, return to that account to flush its remaining queue. Normal one-phone/one-user enforcement avoids that test-only situation.
+
+Capture and retention time use a server UTC anchor plus Android monotonic time during a boot. Successful uploads refresh the anchor. After a reboot, connectivity is needed to re-establish that anchor; invalid phone-clock timestamps are rejected by the server rather than silently moved onto the route. Offline cached attendance stays visible; another official punch waits for a successful state reconciliation. Losing network does not sign the user out or block the entire logged-in app. JWT expiry still requires sign-in for protected reads and new actions, while the scoped native uploader can continue its duty queue.
+
+## Map and timeline
+
+Portal **My locations** opens the route screen; administrators can search/select an employee and date. Employees see their own route. Refresh runs every 30 seconds and on window focus. The mobile home card and **My locations** open the employee route; offline it reads the private local queue/trail. Map tiles require network/cache availability; offline GPS capture does not depend on map tiles.
+
+Routes use fixes with accuracy at most 50 m. A jump greater than 100 m at more than 60 m/s is excluded. Samples more than three minutes apart start a new line segment. Distinct attendance sessions are never joined or counted as missing off-duty tracking. Missing coverage after punch-in, before punch-out and sessions without accurate fixes are reported explicitly; distance is summed only inside valid segments. A daily response caps at 20,000 samples and reports truncation. No road-snapping or invented route is used.
+
+A detected stop requires at least ten minutes and three good fixes within 50 m of the cluster anchor, without a coverage gap. It is an inferred stop, not an attendance/visit or an accusation. The employee explicitly creates an Open visit and takes the required selfies to confirm a visit. The portal timeline combines mobile login snapshots, duty punches, visits, inferred stops and gaps in time order. Arrival/departure photos are private owner/admin requests, never public URLs. Weak-fix/jump counts, latest accepted fix, GPS/permission health and pending uploads help identify missing coverage.
+
+## Device mapping flag for testing
+
+`TrackyuAPI/appsettings.json`: `DeviceMapping:Enabled` defaults to `true`.
+`TrackyuAPI/appsettings.Development.json`: currently overrides it to `false`, as requested for alternate-account tests on the same phone.
+
+With `false`, correct credentials and active accounts are still required, and a signed mobile session still requires the matching phone proof. The server skips first-device ownership and replacement approval checks; it does not overwrite WorkforceDeviceBindings or legacy Salesman.SIM_Number. These temporary sessions use generation zero. Set the Development override to `true` and restart the API to restore normal mapping/approval enforcement. Generation-zero JWTs and native grants then fail on the strict server. No APK rebuild is needed to toggle this server flag.
+
+## Validation and physical limits
+
+The QA suite uses disposable employee/attendance/visit records and removes them afterward. Route checks cover ordering, stop thresholds, poor GPS, impossible jumps, coverage gaps and off-duty session separation. Flutter tests cover offline state restoration, prevention of duplicate offline punches, account/workspace isolation and stopping after confirmed punch-out. Live API/browser checks cover native acknowledgements, idempotence, out-of-duty timestamps, mapped-device proof, owner/admin access, both private selfies, and the mapping flag in enabled/disabled servers.
+
+A custom Android instrumentation test uses a separate disposable database/key and local HTTP server. It checks encryption, persistence after reopen, ordering, duplicate IDs/acknowledgements, user isolation, retained offline trail, expiry, failed HTTP retention and actual successful native HTTP acknowledgement. This test passed on the connected CPH2487 (Android 16). It never creates a real employee punch or fakes an employee route.
+
+A full screen-locked travel test, reboot recovery and battery-manager matrix across Samsung/Xiaomi/Oppo and other supported phones remain physical acceptance checks. Android force-stop, revoked permissions, disabled GPS and vendor battery restrictions can stop/delay collection. Do not promise uninterrupted tracking on every handset; report stale fixes and gaps honestly. Android foreground-service/background-start constraints: https://developer.android.com/develop/background-work/services/fgs/restrictions-bg-start and https://developer.android.com/develop/background-work/services/fgs/service-types .
+
+Build the debug APK using the workspace Flutter SDK and documented API_BASE_URL/ALLOW_LOCAL_HTTP flags. Local USB API uses adb reverse tcp:5199 tcp:5199. Production still needs a trusted HTTPS API and proper release signing; the current APK is a debug build.

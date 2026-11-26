@@ -1,0 +1,51 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Trackyu Android (USB)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/lib/main.dart",
+      "flutterMode": "debug",
+      "preLaunchTask": "Trackyu: Prepare Android USB",
+      "env": {
+        "ANDROID_HOME": "C:\\Development\\Oyu\\.tools\\android-sdk",
+        "ANDROID_SDK_ROOT": "C:\\Development\\Oyu\\.tools\\android-sdk",
+        "JAVA_HOME": "C:\\Program Files\\Android\\openjdk\\jdk-21.0.8",
+        "ANDROID_SERIAL": "6a9c69a6"
+      },
+      "toolArgs": [
+        "--dart-define=API_BASE_URL=http://localhost:5199/api",
+        "--dart-define=ALLOW_LOCAL_HTTP=true"
+      ],
+      "deviceId": "6a9c69a6"
+    },
+    {
+      "name": "Trackyu Android (Attach running app)",
+      "type": "dart",
+      "request": "attach",
+      "cwd": "${workspaceFolder}",
+      "deviceId": "6a9c69a6",
+      "env": {
+        "ANDROID_HOME": "C:\\Development\\Oyu\\.tools\\android-sdk",
+        "ANDROID_SDK_ROOT": "C:\\Development\\Oyu\\.tools\\android-sdk",
+        "JAVA_HOME": "C:\\Program Files\\Android\\openjdk\\jdk-21.0.8",
+        "ANDROID_SERIAL": "6a9c69a6"
+      }
+    },
+    {
+      "name": "Trackyu Android (Emulator)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/lib/main.dart",
+      "flutterMode": "debug",
+      "env": {
+        "ANDROID_HOME": "C:\\Development\\Oyu\\.tools\\android-sdk",
+        "ANDROID_SDK_ROOT": "C:\\Development\\Oyu\\.tools\\android-sdk",
+        "JAVA_HOME": "C:\\Program Files\\Android\\openjdk\\jdk-21.0.8"
+      }
+    }
+  ]
+}

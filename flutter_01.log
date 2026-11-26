@@ -1,0 +1,82 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter pub remove google_maps_flutter
+
+## exception
+
+_TypeError: Null check operator used on a null value
+
+```
+#0      computeTransitiveDependencies (package:flutter_tools/src/package_graph.dart:76:29)
+#1      findPlugins (package:flutter_tools/src/flutter_plugins.dart:190:51)
+#2      refreshPluginsList (package:flutter_tools/src/flutter_plugins.dart:1324:38)
+#3      FlutterProject.ensureReadyForPlatformSpecificTooling (package:flutter_tools/src/project.dart:445:11)
+<asynchronous suspension>
+#4      PackagesGetCommand.runCommand.<anonymous closure> (package:flutter_tools/src/commands/packages.dart:409:11)
+<asynchronous suspension>
+#5      Pool.forEach.run (package:pool/pool.dart:183:19)
+<asynchronous suspension>
+#6      Pool.withResource (package:pool/pool.dart:127:14)
+<asynchronous suspension>
+#7      Future.wait.<anonymous closure> (dart:async/future.dart:567:21)
+<asynchronous suspension>
+#8      Pool.forEach.onListen.<anonymous closure> (package:pool/pool.dart:203:23)
+<asynchronous suspension>
+#9      _StreamController.close (dart:async/stream_controller.dart:640:3)
+<asynchronous suspension>
+#10     _nullDataHandler (dart:async/stream_impl.dart:549:1)
+<asynchronous suspension>
+```
+
+## flutter doctor
+
+```
+[!] Flutter (Channel stable, 3.47.9, on Microsoft Windows [Version 10.0.26300.9818], locale en-US) [412ms]
+    • Flutter version 3.47.9 on channel stable at C:\Development\Oyu\.tools\flutter
+    ! The flutter binary is not on your path. Consider adding C:\Development\Oyu\.tools\flutter\bin to your path.
+    ! The dart binary is not on your path. Consider adding C:\Development\Oyu\.tools\flutter\bin to your path.
+    • Upstream repository https://github.com/flutter/flutter.git
+    • Framework revision c197ca5199 (12 days ago), 2026-10-29 10:10:20 -0400
+    • Engine revision 89c39edfdf
+    • Dart version 3.13.7
+    • DevTools version 2.60.0
+    • Feature flags: enable-web, enable-linux-desktop, enable-macos-desktop, enable-windows-desktop, enable-android, enable-ios, cli-animations, enable-native-assets, enable-record-use, enable-swift-package-manager, omit-legacy-version-file, enable-lldb-debugging, enable-uiscene-migration
+    • If those were intentional, you can disregard the above warnings; however it is recommended to use "git" directly to perform update checks and upgrades.
+
+[✓] Windows Version (Windows 11 or higher, 26H2, 2009) [1,605ms]
+
+[✓] Android toolchain - develop for Android devices (Android SDK version 36.0.0) [9.8s]
+    • Android SDK at C:/Development/Oyu/.tools/android-sdk
+    • Emulator version unknown
+    • Platform android-36, build-tools 36.0.0
+    • Java binary at: C:\Program Files\Android\openjdk\jdk-21.0.8\bin\java
+      This JDK is specified in your Flutter configuration.
+      To change the current JDK, run: `flutter config --jdk-dir="path/to/jdk"`.
+    • Java version OpenJDK Runtime Environment Microsoft-11933218 (build 21.0.8+9-LTS)
+    • All Android licenses accepted.
+
+[✓] Chrome - develop for the web [385ms]
+    • Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+
+[!] Visual Studio - develop Windows apps (SQL Server Management Studio 22 22.7.0) [384ms]
+    • Visual Studio at C:\Program Files\Microsoft SQL Server Management Studio 22\Release
+    • SQL Server Management Studio 22 version 22.7.11903.348
+    ✗ Visual Studio is missing necessary components. Please re-run the Visual Studio installer for the "Desktop development with C++" workload, and include these components:
+        MSVC v142 - VS 2019 C++ x64/x86 build tools
+         - If there are multiple build tool versions available, install the latest
+        C++ CMake tools for Windows
+        Windows 10 SDK
+
+[✓] Connected device (3 available) [396ms]
+    • Windows (desktop) • windows • windows-x64    • Microsoft Windows [Version 10.0.26300.9818]
+    • Chrome (web)      • chrome  • web-javascript • Google Chrome 157.0.8103.40
+    • Edge (web)        • edge    • web-javascript • Microsoft Edge 157.0.4341.46
+
+[✓] Network resources [695ms]
+    • All expected network resources are available.
+
+! Doctor found issues in 2 categories.
+```

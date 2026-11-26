@@ -1,0 +1,25 @@
+{
+  "id": "demo-office-v1",
+  "version": 1,
+  "employeeType": "office",
+  "officeLat": 23.2599,
+  "officeLng": 77.4126,
+  "officeRadiusMeters": 500,
+  "movementMeters": 100,
+  "maxAccuracyMeters": 50,
+  "maxLocationAgeSeconds": 45,
+  "startHour": 9,
+  "startMinute": 30,
+  "endHour": 18,
+  "endMinute": 30,
+  "graceMinutes": 10,
+  "utcOffsetMinutes": 330,
+  "overnight": false,
+  "allowOfflineAttendance": true,
+  "backgroundRequired": true,
+  "rules": [
+    {"id":"office-boundary","event":"checkIn","when":{"all":[{"field":"isOffice","op":"eq","value":true},{"field":"outsideOffice","op":"eq","value":true}]},"effect":{"kind":"block","message":"You are outside the assigned office boundary."}},
+    {"id":"late-reason","event":"checkIn","when":{"all":[{"field":"lateMinutes","op":"gt","valueFrom":"graceMinutes"},{"field":"lateExemptionApproved","op":"eq","value":false}]},"effect":{"kind":"requireField","field":"reason","message":"Please explain your late arrival."}},
+    {"id":"early-reason","event":"checkOut","when":{"all":[{"field":"earlyMinutes","op":"gt","value":0},{"field":"halfDayApproved","op":"eq","value":false}]},"effect":{"kind":"requireField","field":"reason","message":"Please explain the early checkout."}}
+  ]
+}
