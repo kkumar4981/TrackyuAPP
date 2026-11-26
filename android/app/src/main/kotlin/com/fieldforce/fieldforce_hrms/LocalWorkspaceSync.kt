@@ -238,7 +238,13 @@ object LocalWorkspaceSync {
             } catch(e:SyncError) {
 
                 // Keep payload and operation ID; do not hammer the same conflict on every callback.
-                defer(db,scope,id)
+                val is10Min = e.message?.contains("10 minutes") == true
+                val permanent = (e.status == 409 || e.status == 404) || (!is10Min && e.status in 400..499 && e.status !in listOf(401, 408, 429))
+                if (permanent) {
+                    db.localWrite(scope, "syncRetry", JSONObject())
+                } else {
+                    defer(db,scope,id)
+                }
                 if(e.status==401)requireAuthentication(db,auth,"Sign in to resume sync")
 
                 if (e.status == 409 || e.status == 404) {
