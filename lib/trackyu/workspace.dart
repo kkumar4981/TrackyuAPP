@@ -714,7 +714,7 @@ class WorkspaceData extends ChangeNotifier {
       return await session.api.request(route, body: body);
     } on ApiFailure catch (e) {
       if (e.status == 401) {
-        await session.signOut(autoPunchOut: false);
+        session.setOffline(true);
       }
       rethrow;
     }

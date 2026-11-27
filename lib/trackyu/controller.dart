@@ -28453,38 +28453,12 @@ await local!.sync();
 
 
     } catch (_) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      await signOut(autoPunchOut: false);
+      if (user != null && api.authorized) {
+        offline = true;
+        stateKnown = true;
+      } else {
+        await signOut(autoPunchOut: false);
+      }
 
 
 

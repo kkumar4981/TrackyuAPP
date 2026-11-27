@@ -43,7 +43,7 @@ class _AttendanceSummaryState extends State<AttendanceSummary> {
     }
     final id = c.attendance?['serverId'] ?? c.attendance?['id'];
     final key = c.attendance?['hasSelfie'] == true
-        ? '::'
+        ? '$id:${c.attendance?['punchInUtc']}:${c.isField}'
         : null;
     if (key == inPhotoKey) return;
     inPhotoKey = key;
@@ -51,7 +51,7 @@ class _AttendanceSummaryState extends State<AttendanceSummary> {
     if (localBytes != null) {
       inPhoto = Future.value(localBytes);
     } else {
-      final numId = id is num ? id.toInt() : int.tryParse('') ?? 0;
+      final numId = id is num ? id.toInt() : int.tryParse('$id') ?? 0;
       inPhoto = key == null || numId < 1 || numId > 1000000000
           ? null
           : c.api.attendanceSelfie(c.isField ? 'Field' : 'Office', numId);
@@ -478,7 +478,7 @@ class _AttendanceSummaryState extends State<AttendanceSummary> {
       onTap: () {
         final raw = _getInSelfieBytes(c);
         final rawId = c.attendance?['serverId'] ?? c.attendance?['id'];
-        final numId = rawId is num ? rawId.toInt() : int.tryParse('') ?? 0;
+        final numId = rawId is num ? rawId.toInt() : int.tryParse('$rawId') ?? 0;
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => AttendanceSelfiePage(

@@ -1370,23 +1370,10 @@ class _SalesmanVisitShortcutState extends State<SalesmanVisitShortcut> {
 
 
 
-      final vDate = found['workDate']?.toString();
-
-
-
-
-
-
-
+      final rawVDate = found['workDate']?.toString().trim() ?? '';
+      final vDate = rawVDate.length >= 10 ? rawVDate.substring(0, 10) : rawVDate;
       final isDone = visitClosed(found);
-
-
-
-
-
-
-
-      if ((vDate != null && vDate.isNotEmpty && vDate != todayStr) || isDone) {
+      if ((vDate.isNotEmpty && vDate != todayStr) || isDone) {
 
 
 
@@ -1458,38 +1445,15 @@ class _SalesmanVisitShortcutState extends State<SalesmanVisitShortcut> {
 
 
 
-        found = visits.where((r) => !widget.controller.isVisitClosedOrClosing(r) && !visitClosed(r) && widget.controller.pendingVisits.any((p) => p['finish'] != true && !queuedRegularVisit(p) && p['body'] is Map && sameVisit(r, Map<String, dynamic>.from(p['body'] as Map))) &&
-
-
-
-
-
-
-
-                (r['workDate'] == null ||
-
-
-
-
-
-
-
-                    r['workDate'] == '' ||
-
-
-
-
-
-
-
-                    r['workDate'] == todayStr))
-
-
-
-
-
-
-
+        bool isSameDay(dynamic wd) {
+          final s = wd?.toString().trim() ?? '';
+          if (s.isEmpty) return true;
+          return (s.length >= 10 ? s.substring(0, 10) : s) == todayStr;
+        }
+        found = visits.where((r) =>
+                !widget.controller.isVisitClosedOrClosing(r) &&
+                !visitClosed(r) &&
+                isSameDay(r['workDate']))
             .firstOrNull;
 
 
@@ -1755,22 +1719,8 @@ class _SalesmanVisitShortcutState extends State<SalesmanVisitShortcut> {
 
 
 
-          final start = DateTime.tryParse('');
-
-
-
-
-
-
-
+          final start = DateTime.tryParse('${_active?['checkInUtc'] ?? ''}');
           if (start != null) {
-
-
-
-
-
-
-
             final elapsedMins = DateTime.now().toUtc().difference(start.toUtc()).inMinutes;
 
 
@@ -4133,30 +4083,14 @@ class _SalesmanVisitShortcutState extends State<SalesmanVisitShortcut> {
 
 
 
-      final vDate = v['workDate']?.toString();
+      final rawVDate = v['workDate']?.toString().trim() ?? '';
+      final vDate = rawVDate.length >= 10 ? rawVDate.substring(0, 10) : rawVDate;
+      if (vDate.isNotEmpty && vDate != todayStr) return false;
 
-
-
-      if (vDate != null && vDate.isNotEmpty && vDate != todayStr) return false;
-
-
-
-      final start = DateTime.tryParse('');
-
-
-
+      final start = DateTime.tryParse('${v['checkInUtc'] ?? ''}')?.toLocal();
       if (start != null) {
-
-
-
-        final startDay = "--";
-
-
-
+        final startDay = '${start.year}-${start.month.toString().padLeft(2, '0')}-${start.day.toString().padLeft(2, '0')}';
         if (startDay != todayStr) return false;
-
-
-
       }
 
 
@@ -11881,37 +11815,27 @@ const SizedBox(height: 8),
 
 
 
+    final existingActive = data.active ?? widget.controller.activeVisit;
+    if (visit == null && existingActive != null && !visitClosed(existingActive) && !widget.controller.isVisitClosedOrClosing(existingActive)) {
+      final activeShop = '${existingActive['shopName'] ?? existingActive['clientName'] ?? 'current store'}';
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Active visit in progress at $activeShop. Please check out first.'),
+            backgroundColor: const Color(0xffd97706),
+          ),
+        );
+      }
+      return;
+    }
+
     setState(() => _isOpening = true);
-
-
-
-
-
-
 
     try {
 
-
-
-
-
-
-
       final saved = await Navigator.of(context).push<bool>(
 
-
-
-
-
-
-
         MaterialPageRoute(
-
-
-
-
-
-
 
           builder: (_) => (visit == null && initialKind == 'Regular')
               ? SelectRegularPartyPage(data: data)
