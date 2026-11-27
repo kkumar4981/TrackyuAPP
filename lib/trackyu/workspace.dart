@@ -80,6 +80,13 @@ String cleanAddress(String raw) =>
     raw.replaceAll(RegExp(r'\s+'), ' ').trim();
 
 enum WorkFeature {
+  visits(
+    'Client visits',
+    Icons.storefront_outlined,
+    writable: false,
+    teamSupported: false,
+    officeScoped: false,
+  ),
   history(
     'Attendance history',
     Icons.history,
@@ -125,13 +132,6 @@ enum WorkFeature {
   inbox(
     'Inbox',
     Icons.notifications_outlined,
-    writable: false,
-    teamSupported: false,
-    officeScoped: false,
-  ),
-  visits(
-    'Open visit',
-    Icons.storefront_outlined,
     writable: false,
     teamSupported: false,
     officeScoped: false,

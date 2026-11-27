@@ -3597,6 +3597,20 @@ class _AttendancePageState extends State<AttendancePage>
 
                         const SizedBox(height: 16),
 
+                        if (c.menuEnabled('visits')) ...[
+
+                          SalesmanVisitShortcut(
+
+                            controller: c,
+
+                            enabled: !busy,
+
+                          ),
+
+                          const SizedBox(height: 16),
+
+                        ],
+
                         MonthlyGoalsCard(controller: c),
 
                         const SizedBox(height: 16),
@@ -3646,20 +3660,6 @@ class _AttendancePageState extends State<AttendancePage>
                           },
 
                         ),
-
-                        if (c.menuEnabled('visits')) ...[
-
-                          SalesmanVisitShortcut(
-
-                            controller: c,
-
-                            enabled: !busy,
-
-                          ),
-
-                          const SizedBox(height: 16),
-
-                        ],
 
                         // Manager Live Team Map Card
 
