@@ -2096,30 +2096,28 @@ class _ProfilePageState extends State<ProfilePage> {
             if (_savingProfile)
               Positioned.fill(
                 child: Container(
-                  color: Colors.black.withValues(alpha: 0.55),
+                  color: isDark
+                      ? const Color(0xff0b0f19).withValues(alpha: 0.78)
+                      : const Color(0xfff8fafc).withValues(alpha: 0.82),
                   child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
-                      decoration: BoxDecoration(
-                        color: isDark ? const Color(0xff1e293b) : Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: isDark ? const Color(0xff334155) : const Color(0xffe2e8f0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const GpsRadarLoader(
+                          size: 76,
+                          label: 'Saving Profile Changes...',
+                          sublabel: 'Updating employee master record',
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.35),
-                            blurRadius: 24,
-                            offset: const Offset(0, 8),
+                        const SizedBox(height: 14),
+                        Text(
+                          'Saving Profile Changes...',
+                          style: TextStyle(
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? Colors.white : const Color(0xff0f172a),
                           ),
-                        ],
-                      ),
-                      child: GpsRadarLoader(
-                        size: 72,
-                        label: 'Saving Profile Changes...',
-                        sublabel: 'Updating employee master record',
-                        
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

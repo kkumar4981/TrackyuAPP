@@ -4523,10 +4523,10 @@ class _AttendancePageState extends State<AttendancePage>
                         : SlidePunch(
                             controller: c,
                             enabled: canPunch,
-                            hint: 'Selfie & GPS required to Start Work',
+                            hint: 'Selfie & GPS required to Punch In',
                             label: busy
                                 ? 'Confirming attendance...'
-                                : 'Slide to Start Work (Work In)',
+                                : 'Slide to Punch In',
                             onSubmit: punch,
                           ),
                   ),
@@ -4554,35 +4554,43 @@ class _AttendancePageState extends State<AttendancePage>
         if (busy)
           Positioned.fill(
             child: Container(
-              color: Colors.black.withValues(alpha: 0.70),
+              color: isDark
+                  ? const Color(0xff0b0f19).withValues(alpha: 0.78)
+                  : const Color(0xfff8fafc).withValues(alpha: 0.82),
               alignment: Alignment.center,
               child: SafeArea(
-                child: Container(
-                  constraints: const BoxConstraints(maxWidth: 340),
-                  margin: const EdgeInsets.symmetric(horizontal: 28),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-                  decoration: BoxDecoration(
-                    color: isDark ? const Color(0xff161e2e) : Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(
-                      color: const Color(0xff0284c7).withValues(alpha: 0.4),
-                      width: 1.5,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GpsRadarLoader(
+                      label: c.onDuty
+                          ? 'Verifying Punch Out...'
+                          : 'Verifying Punch In...',
+                      sublabel: 'Validating live GPS & attendance rules',
+                      size: 96,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.45),
-                        blurRadius: 36,
-                        spreadRadius: 4,
+                    const SizedBox(height: 16),
+                    Text(
+                      c.onDuty
+                          ? 'Verifying Punch Out...'
+                          : 'Verifying Punch In...',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? Colors.white : const Color(0xff0f172a),
                       ),
-                    ],
-                  ),
-                  child: GpsRadarLoader(
-                    label: c.onDuty
-                        ? 'Verifying Work-Out with Server...'
-                        : 'Verifying Work-In with Server...',
-                    sublabel: 'Validating live geofence & attendance rules',
-                    size: 110,
-                  ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Validating live GPS & attendance rules',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isDark
+                            ? const Color(0xff94a3b8)
+                            : const Color(0xff475569),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
