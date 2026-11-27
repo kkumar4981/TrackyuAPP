@@ -6,6 +6,8 @@ import 'controller.dart';
 import 'daily_route_chart_page.dart';
 import 'error_logger.dart';
 import 'exports.dart';
+import 'geotag_approval_page.dart';
+import 'leave_balance_page.dart';
 import 'local_db_inspector.dart';
 import 'local_inbox.dart';
 import 'locations.dart';
@@ -13,6 +15,7 @@ import 'manager_team_map_page.dart';
 import 'office_location_request.dart';
 import 'profile_avatar.dart';
 import 'profile_page.dart';
+import 'regularization_page.dart';
 import 'theme_selector.dart';
 import 'tracking_status.dart';
 import 'trackyu_app_bar.dart';
@@ -472,7 +475,7 @@ class WorkspaceDrawer extends StatelessWidget {
                         },
                       ),
                     ],
-                    if (controller.menuEnabled('manager_team_map'))
+                    if (controller.menuEnabled('manager_team_map')) ...[
                       _drawerItem(
                         context: context,
                         icon: Icons.radar_rounded,
@@ -490,6 +493,58 @@ class WorkspaceDrawer extends StatelessWidget {
                           );
                         },
                       ),
+                      _drawerItem(
+                        context: context,
+                        icon: Icons.verified_user_rounded,
+                        iconColor: const Color(0xff0284c7),
+                        title: 'GeoTag Approvals',
+                        subtitle: 'Approve or reject team home & godown geo-tags',
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (_) =>
+                                  GeoTagApprovalPage(controller: controller),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                    _drawerItem(
+                      context: context,
+                      icon: Icons.edit_calendar_rounded,
+                      iconColor: const Color(0xff2563eb),
+                      title: 'Regularization',
+                      subtitle: 'Missed punch & time correction requests',
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) =>
+                                RegularizationPage(controller: controller),
+                          ),
+                        );
+                      },
+                    ),
+                    _drawerItem(
+                      context: context,
+                      icon: Icons.account_balance_wallet_rounded,
+                      iconColor: const Color(0xff0d9488),
+                      title: 'Leave Balance & Comp-Off',
+                      subtitle: 'CL/SL/EL balance & comp-off claims',
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) =>
+                                LeaveBalancePage(controller: controller),
+                          ),
+                        );
+                      },
+                    ),
                     if (WorkFeature.values
                         .any((f) => controller.menuEnabled(f.name)))
                       _drawerSection(
