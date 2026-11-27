@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -38,17 +39,39 @@ abstract class SessionVault {
 
 class SecureSessionVault implements SessionVault {
   static const _storage = FlutterSecureStorage();
+  static const _channel = MethodChannel('trackyu/device_settings');
   static const _key = 'trackyu.live.session.v1';
   static const _pendingKey = 'trackyu.pending_punches.v1';
   static const _pendingVisitsKey = 'trackyu.pending_visits.v1';
   static const _cachedVisitsKey = 'trackyu.cached_visits.v1';
   static const _themeKey = 'trackyu.theme_mode.v1';
   @override
-  Future<String?> read() => _storage.read(key: _key);
+  Future<String?> read() async {
+    String? val;
+    try {
+      val = await _storage.read(key: _key);
+    } catch (_) {}
+    if (val != null && val.isNotEmpty) return val;
+    try {
+      final backup = await _channel.invokeMethod<String>('readSession');
+      if (backup != null && backup.isNotEmpty) return backup;
+    } catch (_) {}
+    return val;
+  }
+
   @override
-  Future<void> write(String? value) => value == null
-      ? _storage.delete(key: _key)
-      : _storage.write(key: _key, value: value);
+  Future<void> write(String? value) async {
+    try {
+      await _channel.invokeMethod('saveSession', {'value': value});
+    } catch (_) {}
+    try {
+      if (value == null) {
+        await _storage.delete(key: _key);
+      } else {
+        await _storage.write(key: _key, value: value);
+      }
+    } catch (_) {}
+  }
   @override
   Future<String?> readPendingPunches() => _storage.read(key: _pendingKey);
   @override

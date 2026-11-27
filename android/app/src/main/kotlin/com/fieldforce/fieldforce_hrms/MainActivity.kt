@@ -100,6 +100,26 @@ class MainActivity : FlutterActivity() {
                             result.error("UNAVAILABLE", "Cannot open downloads", null)
                         }
                     }
+                } else if (call.method == "saveSession") {
+                    try {
+                        val value = call.argument<String>("value")
+                        val prefs = applicationContext.getSharedPreferences("trackyu_session_backup", MODE_PRIVATE)
+                        if (value == null) {
+                            prefs.edit().remove("session_json").commit()
+                        } else {
+                            prefs.edit().putString("session_json", value).commit()
+                        }
+                        result.success(true)
+                    } catch (_: Exception) {
+                        result.success(false)
+                    }
+                } else if (call.method == "readSession") {
+                    try {
+                        val prefs = applicationContext.getSharedPreferences("trackyu_session_backup", MODE_PRIVATE)
+                        result.success(prefs.getString("session_json", null))
+                    } catch (_: Exception) {
+                        result.success(null)
+                    }
                 } else if (call.method == "checkCloneApp") {
                     try {
                         val pkg = applicationContext.packageName

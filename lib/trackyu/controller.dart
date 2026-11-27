@@ -32533,140 +32533,18 @@ await local!.sync();
 
 
         final rawAv2 = state['activeVisit'] ?? state['ActiveVisit'];
-        if (onDuty && rawAv2 is Map) {
+        if (!onDuty) {
+          activeVisit = null;
+        } else if (rawAv2 is Map) {
           final av = normalizeVisit(Map<String, dynamic>.from(rawAv2));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          final avDate = av['workDate']?.toString();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          if (avDate == null || avDate.isEmpty || avDate == localDay) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          final rawDate = av['workDate']?.toString().trim() ?? '';
+          final avDate = rawDate.length >= 10 ? rawDate.substring(0, 10) : rawDate;
+          if (avDate.isEmpty || avDate == localDay) {
             activeVisit = av;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           } else {
-
             activeVisit = null;
-
           }
+        }
 
         } else {
 
