@@ -88,7 +88,7 @@ enum WorkFeature {
     officeScoped: false,
   ),
   locations(
-    'Duty route',
+    'My route & timeline',
     Icons.alt_route_rounded,
     writable: false,
     teamSupported: false,
