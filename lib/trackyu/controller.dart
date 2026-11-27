@@ -8553,13 +8553,12 @@ await local!.sync();
 
       activeVisit = onDuty
           ? visits
-              .where((r) =>
-                  !visitClosed(r) &&
-                  !isVisitClosedOrClosing(r) &&
-                  (r['workDate'] == null ||
-                      r['workDate'] == '' ||
-                      r['workDate'] == localDay ||
-                      r['WorkDate'] == localDay))
+              .where((r) {
+                if (visitClosed(r) || isVisitClosedOrClosing(r)) return false;
+                final wd = '${r['workDate'] ?? r['WorkDate'] ?? ''}'.trim();
+                final d = wd.length >= 10 ? wd.substring(0, 10) : wd;
+                return d.isEmpty || d == localDay;
+              })
               .firstOrNull
           : null;
 
@@ -10399,13 +10398,12 @@ await local!.sync();
 
       activeVisit = onDuty
           ? visits
-              .where((r) =>
-                  !visitClosed(r) &&
-                  !isVisitClosedOrClosing(r) &&
-                  (r['workDate'] == null ||
-                      r['workDate'] == '' ||
-                      r['workDate'] == localDay ||
-                      r['WorkDate'] == localDay))
+              .where((r) {
+                if (visitClosed(r) || isVisitClosedOrClosing(r)) return false;
+                final wd = '${r['workDate'] ?? r['WorkDate'] ?? ''}'.trim();
+                final d = wd.length >= 10 ? wd.substring(0, 10) : wd;
+                return d.isEmpty || d == localDay;
+              })
               .firstOrNull
           : null;
 

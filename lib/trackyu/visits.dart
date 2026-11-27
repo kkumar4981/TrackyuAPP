@@ -1615,46 +1615,21 @@ class _SalesmanVisitShortcutState extends State<SalesmanVisitShortcut> {
 
 
 
-    if (found != _active) {
-
-
-
-
-
-
-
+    if (found != null && widget.controller.activeVisit == null) {
+      widget.controller.activeVisit = found;
+    }
+    final changed = (found == null) != (_active == null) ||
+        (found != null &&
+            _active != null &&
+            (!sameVisit(found, _active!) ||
+                '${found['checkInUtc'] ?? ''}' != '${_active?['checkInUtc'] ?? ''}' ||
+                '${found['shopName'] ?? found['clientName'] ?? ''}' !=
+                    '${_active?['shopName'] ?? _active?['clientName'] ?? ''}'));
+    if (changed) {
       setState(() {
-
-
-
-
-
-
-
         _active = found;
-
-
-
-
-
-
-
       });
-
-
-
-
-
-
-
       _ensureTicker();
-
-
-
-
-
-
-
     }
 
 
@@ -2000,6 +1975,7 @@ class _SalesmanVisitShortcutState extends State<SalesmanVisitShortcut> {
 
 
       if (saved == true) {
+        widget.controller.markVisitClosedInMemory(visit);
         widget.controller.clearActiveVisit();
         if (mounted) setState(() => _active = null);
 
@@ -4131,14 +4107,9 @@ class _SalesmanVisitShortcutState extends State<SalesmanVisitShortcut> {
 
 
 
-    final active = isCtrlActiveValid ? ctrlActive : null;
-    if (active == null && _active != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && _active != null) {
-          setState(() => _active = null);
-        }
-      });
-    }
+    final active = isCtrlActiveValid
+        ? ctrlActive
+        : (isLocalActiveValid ? localActive : null);
 
 
 
