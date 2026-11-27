@@ -28,12 +28,16 @@ class EnvironmentItem {
   factory EnvironmentItem.fromJson(Map<String, dynamic> json) {
     final key = (json['key'] ?? json['environmentKey'] ?? 'prod').toString().toLowerCase();
     final name = (json['name'] ?? json['displayName'] ?? key.toUpperCase()).toString();
-    final apiBaseUrl = (json['apiBaseUrl'] ?? 'https://oyuapi.in/trackyuapi/api').toString().trim().replaceAll(RegExp(r'/+$'), '');
+    final apiBaseUrl = (json['apiBaseUrl'] ?? 'https://trackyu.runasp.net/api').toString().trim().replaceAll(RegExp(r'/+$'), '');
     final portalUrl = (json['portalUrl'] ?? 'https://trackyuweb.runasp.net').toString().trim().replaceAll(RegExp(r'/+$'), '');
     final dlPortal = (json['downloadPortalUrl'] ?? '$portalUrl/download').toString().trim();
-    final dlUrl = (json['downloadUrl'] ?? json['apkBaseDownloadUrl'] != null
-        ? '${json['apkBaseDownloadUrl'].toString().replaceAll(RegExp(r'/+$'), '')}/Trackyu_latest.apk'
-        : '$apiBaseUrl/../apk/Trackyu_latest.apk').toString().trim();
+    final rawDl = json['downloadUrl']?.toString().trim();
+    final rawApkBase = json['apkBaseDownloadUrl']?.toString().trim();
+    final dlUrl = (rawDl != null && rawDl.isNotEmpty)
+        ? rawDl
+        : (rawApkBase != null && rawApkBase.isNotEmpty)
+            ? '${rawApkBase.replaceAll(RegExp(r'/+$'), '')}/Trackyu_latest.apk'
+            : '$portalUrl/Trackyu_latest.apk';
 
     return EnvironmentItem(
       key: key,
@@ -58,7 +62,7 @@ class EnvironmentItem {
 }
 
 class TrackyuEnv {
-  static const String _defaultProdApi = 'https://oyuapi.in/trackyuapi/api';
+  static const String _defaultProdApi = 'https://trackyu.runasp.net/api';
   static EnvironmentItem current = const EnvironmentItem(
     key: 'prod',
     name: 'Production',
@@ -73,7 +77,7 @@ class TrackyuEnv {
     'prod': const EnvironmentItem(
       key: 'prod',
       name: 'Production',
-      apiBaseUrl: 'https://oyuapi.in/trackyuapi/api',
+      apiBaseUrl: 'https://trackyu.runasp.net/api',
       portalUrl: 'https://trackyuweb.runasp.net',
       downloadPortalUrl: 'https://trackyuweb.runasp.net/download',
       downloadUrl: 'https://trackyuweb.runasp.net/Trackyu_latest.apk',

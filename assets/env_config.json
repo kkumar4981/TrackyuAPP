@@ -1,13 +1,13 @@
-﻿{
+{
   "activeEnvironment": "prod",
   "environments": {
     "prod": {
       "key": "prod",
       "name": "Production",
-      "apiBaseUrl": "https://oyuapi.in/trackyuapi/api",
+      "apiBaseUrl": "https://trackyu.runasp.net/api",
       "portalUrl": "https://trackyuweb.runasp.net",
       "downloadPortalUrl": "https://trackyuweb.runasp.net/download",
-      "downloadUrl": "https://oyuapi.in/trackyuapi/apk/Trackyu_latest.apk"
+      "downloadUrl": "https://trackyuweb.runasp.net/Trackyu_latest.apk"
     },
     "uat": {
       "key": "uat",

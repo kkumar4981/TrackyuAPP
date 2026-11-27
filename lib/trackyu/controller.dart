@@ -26248,7 +26248,7 @@ await local!.sync();
 
       final normServer = (server ?? '').trim().replaceAll(RegExp(r'/+$'), '');
       final normBase = api.baseUrl.trim().replaceAll(RegExp(r'/+$'), '');
-      if (normServer != normBase || token == null || token.isEmpty) {
+      if (token == null || token.isEmpty) {
 
 
 

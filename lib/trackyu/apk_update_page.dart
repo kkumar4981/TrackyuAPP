@@ -1,6 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'controller.dart';
+import 'env_config.dart';
 import 'app.dart' show appVersion;
 import 'apk_installer.dart';
 
@@ -31,8 +32,10 @@ class _ApkUpdateRequiredPageState extends State<ApkUpdateRequiredPage> {
     }
   }
 
-  Future<void> _openUrl(String? urlString, {String fallback = 'https://oyuapi.in/trackyuapi/apk/Trackyu_latest.apk'}) async {
-    final target = (urlString != null && urlString.isNotEmpty) ? urlString : fallback;
+  Future<void> _openUrl(String? urlString, {String? fallback}) async {
+    final target = (urlString != null && urlString.isNotEmpty)
+        ? urlString
+        : (fallback ?? TrackyuEnv.downloadUrl);
     try {
       final uri = Uri.parse(target);
       await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -49,8 +52,8 @@ class _ApkUpdateRequiredPageState extends State<ApkUpdateRequiredPage> {
   Widget build(BuildContext context) {
     final policy = widget.controller.versionPolicy;
     final defaultVer = policy?['defaultVersion']?.toString() ?? '1.0.72';
-    final downloadUrl = policy?['downloadUrl']?.toString() ?? 'https://oyuapi.in/trackyuapi/apk/Trackyu_latest.apk';
-    final portalUrl = policy?['portalUrl']?.toString() ?? 'https://trackyuweb.runasp.net/download';
+    final downloadUrl = policy?['downloadUrl']?.toString() ?? TrackyuEnv.downloadUrl;
+    final portalUrl = policy?['portalUrl']?.toString() ?? TrackyuEnv.downloadPortalUrl;
     final releaseNotes = policy?['releaseNotes']?.toString() ??
         'Attendance History UI redesign, live photo selfies, and stability improvements.';
     final message = policy?['message']?.toString() ??
