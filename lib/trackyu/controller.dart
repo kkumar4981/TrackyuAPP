@@ -26075,38 +26075,15 @@ await local!.sync();
 
 
 
-    final raw = await vault.read();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    String? raw;
+    try {
+      raw = await vault.read();
+    } catch (_) {
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+      try {
+        raw = await vault.read();
+      } catch (_) {}
+    }
     if (raw == null) return;
 
 
@@ -26267,7 +26244,9 @@ await local!.sync();
 
 
 
-      if (server != api.baseUrl || token == null || token.isEmpty) {
+      final normServer = (server ?? '').trim().replaceAll(RegExp(r'/+$'), '');
+      final normBase = api.baseUrl.trim().replaceAll(RegExp(r'/+$'), '');
+      if (normServer != normBase || token == null || token.isEmpty) {
 
 
 
