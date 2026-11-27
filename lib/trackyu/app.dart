@@ -2642,25 +2642,22 @@ class _AttendancePageState extends State<AttendancePage>
             ),
           ),
           const SizedBox(width: 8),
-          OutlinedButton.icon(
+          FilledButton.icon(
             onPressed: canPunch && !busy ? punch : null,
-            icon: const Icon(Icons.power_settings_new_rounded, size: 16),
+            icon: const Icon(Icons.logout_rounded, size: 16),
             label: const Text(
-              'Day Punch Out',
-              style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
+              'Punch Out',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
             ),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: isDark ? const Color(0xfffca5a5) : const Color(0xffb91c1c),
-              backgroundColor: const Color(0xffef4444).withValues(alpha: isDark ? 0.14 : 0.08),
-              side: BorderSide(
-                color: const Color(0xffef4444).withValues(alpha: 0.45),
-                width: 1.2,
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              minimumSize: const Size(0, 38),
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xffef4444),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              minimumSize: const Size(0, 40),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
               ),
+              elevation: 0,
             ),
           ),
         ],

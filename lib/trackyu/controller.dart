@@ -26085,6 +26085,8 @@ await local!.sync();
       } catch (_) {}
     }
     if (raw == null) return;
+    // Ensure SharedPreferences backup is populated even for sessions restored from SecureStorage
+    unawaited(vault.write(raw));
 
 
 
